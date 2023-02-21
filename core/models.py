@@ -2,19 +2,8 @@ from django.db import models
 from django.contrib.auth.base_user import AbstractBaseUser
 
 class User(AbstractBaseUser):
-    email = models.EmailField(
-        max_length=255,
-        unique=True,
-    )
-
-    USERNAME_FIELD = 'email'
-    
     class Meta:
         db_table = 'user'
-    
-    def __str__(self) -> str:
-        return self.email
-
         
 
 class Profile(models.Model):
