@@ -48,6 +48,23 @@
         <div>
             <div class="lg:p-12 max-w-md max-w-xl lg:my-0 my-12 mx-auto p-6 space-y-">
                 <h1 class="lg:text-3xl text-xl font-semibold  mb-6"> Log in</h1>
+                
+                {% comment %} MESSAGES {% endcomment %}
+                <div>
+                    {% for message in messages %}
+                        {% if 'WARNING' in message.tags %}
+                            <div style="witdh: 100%; background-color: #dc3545; border-radius: 5px; margin: 5px; padding: 5px;">
+                                <h5 style="color: white; font-weight: bold;">{{ message }}</h5>
+                            </div>
+                        {% endif %}
+                        {% if 'SUCCESS' in message.tags %}
+                            <div style="witdh: 100%; background-color: lightgreen; border-radius: 5px; margin: 5px; padding: 5px;">
+                                <h5 style="font-weight: bold;">{{ message }}</h5>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
                 <form action="index.html">
                     <input type="text" placeholder="Username" class="bg-gray-200 mb-2 shadow-none dark:bg-gray-800" style="border: 1px solid #d3d5d8 !important;">
                     <input type="text" placeholder="***********" class="bg-gray-200 mb-2 shadow-none dark:bg-gray-800" style="border: 1px solid #d3d5d8 !important;">
