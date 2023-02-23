@@ -5,8 +5,8 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('core.urls')),
     path('', include('users.urls')),
+    path('', include('feed.urls')),
 ]
 
 # config from upload image
