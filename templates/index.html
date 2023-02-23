@@ -34,7 +34,7 @@
                         </div>-->
 
                         <div class="header_search">
-                            <input type="text" placeholder="Search for username..">
+                            <input type="text" placeholder="Procurar por nome de usuário..">
                             <div class="icon-search">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor">
@@ -50,7 +50,7 @@
                         <a href="#"
                             class="bg-pink-500 flex font-bold hidden hover:bg-pink-600 hover:text-white inline-block items-center lg:block max-h-10 mr-4 px-4 py-2 rounded shado text-white">
                             <ion-icon name="add-circle" class="-mb-1
-                             mr-1 opacity-90 text-xl uilus-circle"></ion-icon> Upload Pics / Videos
+                             mr-1 opacity-90 text-xl uilus-circle"></ion-icon> Upload Imagens/Vídeos
                         </a>
                          <!-- upload dropdown box -->
                         <div uk-dropdown="pos: top-right;mode:click ; animation: uk-animation-slide-bottom-small" class="header_dropdown">
@@ -171,10 +171,10 @@
                         </a>
                         <div uk-drop="mode: click;offset:9" class="header_dropdown profile_dropdown border-t">
                             <ul>
-                                <li><a href="setting.html"> Account setting </a> </li>
-                                <li><a href="explore.html">explore </a> </li>
-                                <li><a href="#"> Help </a> </li>
-                                <li><a href="signin.html"> Log Out</a></li>
+                                <li><a href="setting.html"> Configurações da conta </a> </li>
+                                <li><a href="explore.html">Explorar </a> </li>
+                                <li><a href="#"> Ajuda </a> </li>
+                                <li><a href="{% url 'logout' %}"> Ssair</a></li>
                             </ul>
                         </div>
 

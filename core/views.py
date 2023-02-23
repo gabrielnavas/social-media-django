@@ -3,18 +3,42 @@ from django.http import HttpRequest
 from django.contrib import messages
 from django.core.validators import validate_email
 from django.contrib.auth.models import User
+from django.contrib import auth
 from django.db import transaction
+from django.contrib.auth.decorators import login_required
 
 from .models import Profile
 
 
+@login_required(login_url='signin')
 def index(request: HttpRequest):
     return render(request, 'index.html')
 
-def signin(request: HttpRequest):
-    return render(request, 'signin.html')
+def logout(request: HttpRequest):
+    auth.logout(request)
+    return redirect('signin')
 
-def create_user_signup(username: str, email: str, password: str):
+
+def signin(request: HttpRequest):
+    if request.user.is_authenticated:
+        return redirect('/')
+
+    if request.method == 'GET':
+        return render(request, 'signin.html')
+
+    username = request.POST.get('username', '').strip()
+    password = request.POST.get('password', '').strip()
+    # remember_me = request.POST.get('remember_me', 'off') == 'on'
+
+    user = auth.authenticate(username=username, password=password)
+    if user is None:
+        messages.add_message(request, messages.WARNING, 'Nome de usuário ou senha inválido', extra_tags="WARNING_FORM")
+        return render(request, 'signin.html')
+    
+    auth.login(request=request, user=user)
+    return redirect('/')
+
+def _create_user_signup(username: str, email: str, password: str):
     user=User.objects.create_user(
         username=username,
         email=email,
@@ -22,12 +46,12 @@ def create_user_signup(username: str, email: str, password: str):
     )
     user.save()
 
-def create_profile(username: str):
+def _create_profile(username: str):
     user = User.objects.get(username=username)
     profile = Profile.objects.create(user=user)
     profile.save()
 
-def validate_signup(    
+def _validate_signup(    
     request: HttpRequest,  
     username: str, 
     email: str, 
@@ -96,7 +120,7 @@ def signup(request: HttpRequest):
     password_confirmation = request.POST.get('password_confirmation', '').strip()
     is_term_conditions = request.POST.get('is_terms_conditions', 'off') == 'on'
 
-    has_validation_error = validate_signup(
+    has_validation_error = _validate_signup(
         request=request,
         username=username, 
         email=email, 
@@ -107,12 +131,12 @@ def signup(request: HttpRequest):
     if has_validation_error:
         return redirect('signup')
 
-    create_user_signup(
+    _create_user_signup(
         username=username, 
         email=email, 
         password=password
     )
-    create_profile(username=username)    
+    _create_profile(username=username)    
     
     messages.add_message(request, messages.SUCCESS, 'Cadastro feito.', extra_tags="SUCCESS")
     messages.add_message(request, messages.SUCCESS, 'Faça o login.', extra_tags="SUCCESS")
