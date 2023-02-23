@@ -10,6 +10,7 @@ urlpatterns = [
     path('signin', views.signin, name='signin'),
 ]
 
+# config from upload image
 urlpatterns = urlpatterns + static(
     settings.MEDIA_URL, 
     document_root=settings.MEDIA_ROOT,
