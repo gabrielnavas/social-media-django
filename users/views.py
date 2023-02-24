@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.http import HttpRequest
 from django.contrib import messages
 from django.core.validators import validate_email
-# from django.contrib.auth.models import User
 from django.contrib import auth
 from django.db import transaction
 
