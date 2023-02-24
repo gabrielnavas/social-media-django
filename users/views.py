@@ -2,16 +2,25 @@ from django.shortcuts import render, redirect
 from django.http import HttpRequest
 from django.contrib import messages
 from django.core.validators import validate_email
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.contrib import auth
 from django.db import transaction
 
-from .models import Profile
+from .models import Profile, UserModel
 
 def logout(request: HttpRequest):
     auth.logout(request)
     return redirect('signin')
 
+
+def _login_user(request: HttpRequest, username: str, password: str):
+    is_login = True
+    user = auth.authenticate(username=username, password=password)
+    if user is None:
+        is_login = False
+    else:
+        auth.login(request=request, user=user)
+    return is_login
 
 def signin(request: HttpRequest):
     if request.user.is_authenticated:
@@ -24,16 +33,15 @@ def signin(request: HttpRequest):
     password = request.POST.get('password', '').strip()
     # remember_me = request.POST.get('remember_me', 'off') == 'on'
 
-    user = auth.authenticate(username=username, password=password)
-    if user is None:
+    is_login = _login_user(request=request, username=username, password=password)
+    if not is_login:
         messages.add_message(request, messages.WARNING, 'Nome de usuário ou senha inválido', extra_tags="WARNING_FORM")
         return render(request, 'signin.html')
     
-    auth.login(request=request, user=user)
     return redirect('/')
 
 def _create_user_signup(username: str, email: str, password: str):
-    user=User.objects.create_user(
+    user=UserModel.objects.create_user(
         username=username,
         email=email,
         password=password
@@ -41,7 +49,7 @@ def _create_user_signup(username: str, email: str, password: str):
     user.save()
 
 def _create_profile(username: str):
-    user = User.objects.get(username=username)
+    user = UserModel.objects.get(username=username)
     profile = Profile.objects.create(user=user)
     profile.save()
 
@@ -90,18 +98,22 @@ def _validate_signup(
         messages.add_message(request, messages.WARNING, 'Senha está diferente da Confirmação de senha.', extra_tags="WARNING_FORM")
         has_validation_error = True
     
-    user_email_exists = User.objects.filter(email=email)
+    user_email_exists = UserModel.objects.filter(email=email)
     if user_email_exists.exists():
         messages.add_message(request, messages.WARNING, 'E-mail já em uso.', extra_tags="WARNING_FORM")
         has_validation_error = True
     
-    user_username_exists = User.objects.filter(username=username)
+    user_username_exists = UserModel.objects.filter(username=username)
     if user_username_exists.exists():
         messages.add_message(request, messages.WARNING, 'Nome de usuário já em uso.', extra_tags="WARNING_FORM")
         has_validation_error = True
     
     return has_validation_error
 
+
+
+def _redirect_to_settings():
+    return redirect('settings')
 
 @transaction.atomic
 def signup(request: HttpRequest):
@@ -131,7 +143,5 @@ def signup(request: HttpRequest):
         password=password
     )
     _create_profile(username=username)    
-    
-    messages.add_message(request, messages.SUCCESS, 'Cadastro feito.', extra_tags="SUCCESS")
-    messages.add_message(request, messages.SUCCESS, 'Faça o login.', extra_tags="SUCCESS")
-    return redirect('signin')
+    _login_user(request=request, username=username, password=password)
+    return redirect('settings')

@@ -7,6 +7,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('users.urls')),
     path('', include('feed.urls')),
+    path('', include('settings.urls')),
 ]
 
 # config from upload image
