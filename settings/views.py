@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import List
 
 from django.shortcuts import render
 from django.http import HttpRequest
@@ -7,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import transaction
 
-from users.models import Profile, UserModel
+from users.models import Profile
 
 def _context_setttings(request: HttpRequest):
     profile = Profile.objects.filter(user__id=request.user.id).first()
