@@ -11,7 +11,6 @@ from users.models import Profile, UserModel
 
 def _context_setttings(request: HttpRequest):
     profile = Profile.objects.filter(user__id=request.user.id).first()
-    print(profile.update_at)
     context = {
         "profile": profile
     }
@@ -29,11 +28,12 @@ def _settings_post(request: HttpRequest):
     username = request.POST.get('username', '').strip()
     email = request.POST.get('email', '').strip()
     profile_about = request.POST.get('about', '').strip()
-    profile_localization = request.POST.get('localization', '').strip()
+    profile_location = request.POST.get('location', '').strip()
     profile_work_at = request.POST.get('work_at', '').strip()
     profile_relationship = request.POST.get('relationship', '').strip()
+    profile_img = request.FILES.get('image')
 
-    # find profile
+    # find profile by user id 
     profile: Profile = Profile.objects.filter(user__id=request.user.id).first()
     if profile is None: 
         messages.add_message(request, messages.WARNING, 'Perfil não encontrado', extra_tags="WARNING_FORM")
@@ -46,9 +46,11 @@ def _settings_post(request: HttpRequest):
     profile.user.username = username
     profile.user.email = email
     profile.about = profile_about
-    profile.localization = profile_localization
+    profile.location = profile_location
     profile.work_at = profile_work_at
     profile.relationship = profile_relationship
+    if profile_img is not None:
+        profile.profileimg = profile_img
     profile.update_at = datetime.now()
 
     profile.user.save()

@@ -30,16 +30,15 @@
             <li><a href="#">Segurança</a></li>
             <li><a href="#"></a></li>
         </ul>
-        <form action="{% url 'settings' %}" method="POST">
+        <form action="{% url 'settings' %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="grid lg:grid-cols-3 mt-12 gap-8">
                 <div>
                     <h3 class="text-xl mb-2"> Básico</h3>
                     <p></p>
                 </div>
-
                 <div class="bg-white rounded-md lg:shadow-lg shadow col-span-2">
-
+                    
                     {% comment %} MESSAGES {% endcomment %}
                     <div>
                         {% for message in messages %}
@@ -83,45 +82,53 @@
                             name="last_name"
                             value="{{ profile.user.last_name }}"
                             class="shadow-none bg-gray-100">
-                        </div>
-                        <div>
-                            <label for=""> Nome de usuário</label>
-                            <input 
+                    </div>
+                    <div>
+                        <label for=""> Nome de usuário</label>
+                        <input 
+                        type="text" 
+                        placeholder="" 
+                        name="username"
+                        value="{{ profile.user.username }}"
+                        class="shadow-none bg-gray-100">
+                        <span style="color: lightgray;">Será possível trocar daqui 30 dias</span>
+                    </div>
+                    <div class="col-span-2">
+                        <label for=""> E-mail</label>
+                        <input 
                             type="text" 
-                            placeholder="" 
-                            name="username"
-                            value="{{ profile.user.username }}"
+                            placeholder="E-mail..."
+                            name="email"
+                            value="{{ profile.user.email }}"
                             class="shadow-none bg-gray-100">
-                            <span style="color: lightgray;">Será possível trocar daqui 30 dias</span>
-                        </div>
-                        <div class="col-span-2">
-                            <label for=""> E-mail</label>
-                            <input 
-                                type="text" 
-                                placeholder="E-mail..."
-                                name="email"
-                                value="{{ profile.user.email }}"
-                                class="shadow-none bg-gray-100">
-                                <span style="color: lightgray;">Será possível trocar daqui 30 dias</span>
-                            </div>
-                        <div class="col-span-2">
-                            <label for="about">Sobre você</label>  
-                            <textarea  
-                                rows="3"  
-                                placeholder="Sou uma pessoa..." 
-                                name="about"
-                                class="shadow-none bg-gray-100">{{ profile.about }}</textarea>
-                        </div> 
-                        <div class="col-span-2">
-                            <label for=""> Sua localização</label>
-                            <input 
-                                type="text" 
-                                placeholder="São Paulo - SP" 
-                                name="localization"
-                                value="{{ profile.localization }}"
-                                class="shadow-none bg-gray-100">
-                        </div>
-                        <div>
+                        <span style="color: lightgray;">Será possível trocar daqui 30 dias</span>
+                    </div>
+                    <div class="col-span-2">
+                        <label for="about">Sobre você</label>  
+                        <textarea  
+                            rows="3"  
+                            placeholder="Sou uma pessoa..." 
+                            name="about"
+                            class="shadow-none bg-gray-100">{{ profile.about }}</textarea>
+                    </div> 
+                    <div class="col-span-2">
+                        <img src="{{ profile.profileimg.url }}" width="250" height="500" >
+                        <label for=""> Profile Image</label>
+                        <input 
+                            type="file" 
+                            name="image"
+                            class="shadow-none bg-gray-100">
+                    </div>
+                    <div class="col-span-2">
+                        <label for=""> Sua localização</label>
+                        <input 
+                            type="text" 
+                            placeholder="São Paulo - SP" 
+                            name="location"
+                            value="{{ profile.location }}"
+                            class="shadow-none bg-gray-100">
+                    </div>
+                    <div>
                         <label for=""> Trabalha com</label>
                         <input 
                             type="text" 
@@ -129,8 +136,8 @@
                             name="work_at"
                             value="{{ profile.work_at }}"
                             class="shadow-none bg-gray-100">
-                        </div> 
-                        <div>
+                    </div> 
+                    <div>
                         <label for=""> Relacionamento </label>
                         <select 
                             id="relationship" 
@@ -145,28 +152,27 @@
                     </div>
                 </div> 
 
-
-
                 <div class="bg-gray-10 p-6 pt-0 flex justify-end space-x-3">
-                    <button    
-                        class="p-2 px-4 rounded bg-gray-50 text-red-500"> 
-                        Cancelar 
-                    </button>
+                    <a href="{% url 'feed' %}">
+                        <button    
+                            class="p-2 px-4 rounded bg-gray-50 text-red-500"
+                            type="button"> 
+                            Cancelar 
+                        </button>
+                    </a>
                     <button 
                         type="submit" 
                         class="button bg-blue-700"> 
                         Salvar 
                     </button>
                 </div>
+            </div>
 
-
-                </div>
-
-                <div>
-                    <h3 class="text-xl mb-2"> Privacidade</h3>
-                    <p> </p>
-                </div>
-                <div class="bg-white rounded-md lg:shadow-lg shadow lg:p-6 p-4 col-span-2">
+            <div>
+                <h3 class="text-xl mb-2"> Privacidade</h3>
+                <p> </p>
+            </div>
+            <div class="bg-white rounded-md lg:shadow-lg shadow lg:p-6 p-4 col-span-2">
 
                 <div class="space-y-3">
                     <div class="flex justify-between items-center">
