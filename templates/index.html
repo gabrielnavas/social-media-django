@@ -63,28 +63,34 @@
                             <!-- notification contents -->
                             <div class="flex justify-center flex-center text-center">
     
-                                <div class="flex flex-col choose-upload text-center">
+                                <form 
+                                    action="{% url 'feed:create_post' %}" 
+                                    method="POST"
+                                    enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="flex flex-col choose-upload text-center">
                                    
                                     {% comment %} <div class="bg-gray-100 border-2 border-dashed flex flex-col h-24 items-center justify-center relative w-full rounded-lg  ">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-12">
                                             <path d="M5.5 13a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 13H11V9.413l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13H5.5z" />
                                             <path d="M9 13h2v5a1 1 0 11-2 0v-5z" />
                                         </svg>
-                                    </div>
-
-                                    <p class="my-3 leading-6"> Arraste uma imagem <br> please upload her ..
-                                    </p> {% endcomment %}
-                                    <input type="file" name="post_image">
-                                    {% comment %} <a href="#" class="button soft-warning small"> Escolha a imagem</a> {% endcomment %}
-                                    <textarea 
-                                        name="caption"
-                                        placeholder="Título..."></textarea>
-                                    <button class="button bg-blue-700" type="submit">Postar</button>
-    
-                                    {% comment %} <a href="#" class="uk-text-muted mt-3 uk-link"
+                                        </div>
+                                    
+                                        <p class="my-3 leading-6"> Arraste uma imagem <br> please upload her ..
+                                        </p> {% endcomment %}
+                                        <input type="file" name="post_image">
+                                        {% comment %} <a href="#" class="button soft-warning small"> Escolha a imagem</a> {% endcomment %}
+                                        <textarea 
+                                            name="caption"
+                                            placeholder="Título..."></textarea>
+                                        <button class="button bg-blue-700" type="submit">Postar</button>
+                                        
+                                        {% comment %} <a href="#" class="uk-text-muted mt-3 uk-link"
                                         uk-toggle="target: .choose-upload ;  animation: uk-animation-slide-right-small, uk-animation-slide-left-medium; queued: true">
                                         Or Import Video </a> {% endcomment %}
-                                </div>
+                                    </div>
+                                </form>
     
                                 <div class="uk-flex uk-flex-column choose-upload" hidden>
                                     <div class="mx-auto flex flex-col h-24 items-center justify-center relative w-full rounded-lg">
@@ -95,7 +101,8 @@
                                     <p class="my-3 leading-6"> Import videos from YouTube <br> Copy / Paste your video link here </p>
                                     <form 
                                         class="uk-grid-small" 
-                                        uk-grid action="{% url 'create_post' %}" 
+                                        uk-grid 
+                                        action="{% url 'feed:create_post' %}" 
                                         method="POST"
                                         enctype="multipart/form-data">
                                         
@@ -159,22 +166,6 @@
                         <!-- Messages -->
 
 
-                        {% comment %} MESSAGES CREATE POST INIT {% endcomment %}
-                        <div>
-                            {% for message in messages %}
-                                {% if 'FEED_WARNING' in message.tags %}
-                                    <div style="witdh: 100%; background-color: #ffc107; border-radius: 5px; margin: 5px; padding: 5px;">
-                                        <h5 style="color: white; font-weight: bold;">{{ message }}</h5>
-                                    </div>
-                                {% endif %}
-                                {% if 'FEED_SUCCESS' in message.tags %}
-                                    <div style="witdh: 100%; background-color: #ffc107; border-radius: 5px; margin: 5px; padding: 5px;">
-                                        <h5 style="color: white; font-weight: bold;">{{ message }}</h5>
-                                    </div>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                        {% comment %} MESSAGES CREATE POST END {% endcomment %}
 
 
                         <a href="#" class="header-links-item">
@@ -226,6 +217,23 @@
 
                     <!-- left sidebar-->
                     <div class="space-y-5 flex-shrink-0 lg:w-7/12">
+
+                        {% comment %} MESSAGES CREATE POST INIT {% endcomment %}
+                        <div>
+                            {% for message in messages %}
+                                {% if 'FEED_WARNING' in message.tags %}
+                                    <div style="witdh: 100%; background-color: #ffc107; border-radius: 5px; margin: 5px; padding: 5px;">
+                                        <h5 style="color: white; font-weight: bold;">{{ message }}</h5>
+                                    </div>
+                                {% endif %}
+                                {% if 'FEED_SUCCESS' in message.tags %}
+                                    <div style="witdh: 100%; background-color: lightgreen; border-radius: 5px; margin: 5px; padding: 5px;">
+                                        <h5 style="color: white; font-weight: bold;">{{ message }}</h5>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        {% comment %} MESSAGES CREATE POST END {% endcomment %}
 
                         <!-- post 1-->
                         <div class="bg-white shadow rounded-md  -mx-2 lg:mx-0">

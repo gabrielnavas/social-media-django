@@ -2,12 +2,13 @@ from django.shortcuts import render, redirect
 from django.http import HttpRequest
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.db import transaction
 
 from users.models import Profile
 from .models import Post
 
 @login_required(login_url='signin')
-def feed(request: HttpRequest):
+def index(request: HttpRequest):
     profile = Profile.objects.filter(user__id=request.user.id).first()
     context = {
         "profile": profile
@@ -15,9 +16,10 @@ def feed(request: HttpRequest):
     return render(request, 'index.html', context=context)
 
 
+@transaction.atomic
 @login_required(login_url='signin')
 def create_post(request: HttpRequest):
-    if request.method is not "POST":
+    if request.method != "POST":
         return redirect('')
 
     # get caption
@@ -59,5 +61,5 @@ def create_post(request: HttpRequest):
         extra_tags='FEED_SUCCESS',
     )
 
-    return redirect('')
+    return redirect('/')
 
