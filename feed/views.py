@@ -10,9 +10,7 @@ from .models import Post
 @login_required(login_url='signin')
 def index(request: HttpRequest):
     profile = Profile.objects.filter(user__id=request.user.id).first()
-    posts = Post.objects.all()
-
-    print(len(posts))
+    posts = Post.objects.filter().order_by('-created_at')
     
     context = {
         "profile": profile,
