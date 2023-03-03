@@ -10,8 +10,13 @@ from .models import Post
 @login_required(login_url='signin')
 def index(request: HttpRequest):
     profile = Profile.objects.filter(user__id=request.user.id).first()
+    posts = Post.objects.all()
+
+    print(len(posts))
+    
     context = {
-        "profile": profile
+        "profile": profile,
+        "posts": posts,
     }
     return render(request, 'index.html', context=context)
 
@@ -20,7 +25,7 @@ def index(request: HttpRequest):
 @login_required(login_url='signin')
 def create_post(request: HttpRequest):
     if request.method != "POST":
-        return redirect('')
+        return redirect('/')
 
     # get caption
     caption = request.POST.get('caption', '').strip()
@@ -34,7 +39,7 @@ def create_post(request: HttpRequest):
             message='Tenta novamente mais tarde.',
             extra_tags='CREATE_POST_WARNING',
         )
-        return redirect('')
+        return redirect('/')
 
     # find profile by user id
     profile = Profile.objects.filter(user__id=request.user.id).first()
@@ -45,11 +50,11 @@ def create_post(request: HttpRequest):
             message='Tenta novamente mais tarde.',
             extra_tags='FEED_WARNING',
         )
-        return redirect('')
+        return redirect('/')
 
     # create post
     post = Post.objects.create(
-        user=profile.user,
+        profile=profile,
         caption=caption,
         image=post_image,
     )

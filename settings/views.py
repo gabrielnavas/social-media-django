@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.http import HttpRequest
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -56,8 +56,7 @@ def _settings_post(request: HttpRequest):
     profile.save()
     messages.add_message(request, messages.WARNING, 'Perfil atualizado.', extra_tags="SUCCESS")
 
-    context = _context_setttings(request=request)
-    return render(request, 'setting.html', context=context)
+    return redirect('feed:index')
 
 @login_required(login_url='signin')
 def settings(request: HttpRequest):
